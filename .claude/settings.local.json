@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3 -c \"import openpyxl; print\\('ok'\\)\")",
+      "Bash(pip3 install *)",
+      "Bash(python3 -c ' *)",
+      "Bash(python3 /home/oxicoreco/Documentos/GitHub/oxicorerevenue-main/docs/gerar_planilha_abr.py)",
+      "Bash(python3 /home/oxicoreco/Documentos/GitHub/oxicorerevenue-main/docs/gerar_abr_real.py)",
+      "Bash(psql --version)",
+      "Bash(supabase --version)",
+      "Bash(python3 -c \"import psycopg2; print\\('psycopg2 ok'\\)\")",
+      "Bash(python3 -c \"from supabase import create_client; print\\('supabase sdk ok'\\)\")",
+      "Bash(npm install *)",
+      "Bash(python3 -)"
+    ]
+  }
+}
