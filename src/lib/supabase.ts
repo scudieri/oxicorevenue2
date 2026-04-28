@@ -17,8 +17,8 @@ export interface PipelineDeal {
   id?: number
   cliente: string
   valor: number | null
-  status: 'Fechado' | 'Proposta' | 'Negativou' | 'Stand by'
-  temperatura: 'Quente' | 'Morno' | 'Frio'
+  status: 'Fechado' | 'Proposta' | 'Negativou' | 'Stand by' | 'Lead' | 'Sem Contato' | 'Desqualificado' | 'Perdido' | 'Em Contato' | 'Reunião Agendada' | 'Reunião Acontecida' | 'No Show'
+  temperatura: 'Quente' | 'Morno' | 'Frio' | null
   data_lead?: string
   canal?: string
   produto?: 'ONE TIME' | 'Ass. Booking'
@@ -38,6 +38,18 @@ export interface SdrDiario {
   remarcada?: number
   obs?: string
   periodo?: string
+}
+
+export interface FunilPeriodo {
+  periodo: string
+  total_leads: number | null
+  marcados: number | null
+  acontecidos: number | null
+  vendas: number | null
+  receita: number | null
+  investimento: number | null
+  obs?: string | null
+  atualizado_em?: string
 }
 
 export interface ConfigMes {

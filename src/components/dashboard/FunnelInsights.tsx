@@ -97,15 +97,15 @@ export const FunnelInsights = ({
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.4 }}
-            className="p-5 text-center bg-gradient-to-br from-emerald-500/20 to-emerald-600/10 rounded-2xl border border-emerald-500/20"
+            className="p-5 text-center bg-gradient-to-br from-[#E10600]/20 to-[#E10600]/5 rounded-2xl border border-[#E10600]/20"
           >
-            <span className="text-[9px] font-black text-emerald-400 uppercase tracking-widest">
+            <span className="text-[9px] font-black text-white uppercase tracking-widest">
               ROAS
             </span>
-            <div className="text-3xl font-black text-emerald-400 mt-2">
+            <div className="text-3xl font-black text-white mt-2">
               {roas.toFixed(2)}x
             </div>
-            <div className="text-[8px] text-emerald-400/70 font-bold uppercase mt-1">
+            <div className="text-[8px] text-white/70 font-bold uppercase mt-1">
               Retorno sobre Investimento
             </div>
           </motion.div>

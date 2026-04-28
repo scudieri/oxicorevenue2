@@ -1,5 +1,4 @@
 import { useMemo } from "react";
-import { Link, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { LoadingScreen } from "@/components/dashboard/LoadingScreen";
 import { Header } from "@/components/dashboard/Header";
@@ -9,12 +8,10 @@ import { FunnelInsights } from "@/components/dashboard/FunnelInsights";
 import { CloserCard } from "@/components/dashboard/CloserCard";
 import { SDRCard } from "@/components/dashboard/SDRCard";
 import { PacingStatus } from "@/components/dashboard/PacingStatus";
-import { AddDealModal } from "@/components/dashboard/AddDealModal";
-import { AddSdrModal } from "@/components/dashboard/AddSdrModal";
-import { CloserModal } from "@/components/dashboard/CloserModal";
-import { useConfig, usePipeline, useSdrDiario } from "@/hooks/useSupabaseData";
-import { useAuth } from "@/contexts/AuthContext";
-import { TableProperties, Users, LogOut } from "lucide-react";
+import { FunnelManualCard } from "@/components/dashboard/FunnelManualCard";
+import { useConfig, usePipeline, useSdrDiario, useFunilPeriodo } from "@/hooks/useSupabaseData";
+import { usePeriod } from "@/contexts/PeriodContext";
+import { PeriodSelector } from "@/components/dashboard/PeriodSelector";
 
 import brunoPic  from "@/assets/bruno.png";
 import felipePic from "@/assets/felipe.png";
@@ -26,13 +23,11 @@ const formatC = (v: number) =>
   new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL", maximumFractionDigits: 0 }).format(v);
 
 const Index = () => {
-  const { signOut, user } = useAuth();
-  const navigate = useNavigate();
-  const { data: config,  isLoading: loadingConfig  } = useConfig();
+  const { label: periodLabel } = usePeriod();
+  const { data: config } = useConfig();
   const { data: pipeline, isLoading: loadingPipeline, dataUpdatedAt } = usePipeline();
   const { data: sdrData,  isLoading: loadingSdr     } = useSdrDiario();
-
-  const handleLogout = async () => { await signOut(); navigate("/login") };
+  const { data: funil } = useFunilPeriodo();
 
   const loading = loadingPipeline || loadingSdr;
 
@@ -43,24 +38,31 @@ const Index = () => {
     const fechados   = pipeline.filter(d => d.status === "Fechado");
     const propostas  = pipeline.filter(d => d.status === "Proposta");
 
-    const receita    = fechados.reduce((s, d)  => s + (d.valor ?? 0), 0);
+    // Funil oficial (snapshot manual em funil_periodo) tem prioridade.
+    // Pipeline counts servem de fallback quando o funil não estiver preenchido.
+    const totalLeads = funil?.total_leads ?? pipeline.length;
+    const vendasC    = funil?.vendas      ?? fechados.length;
+    const receita    = Number(funil?.receita ?? fechados.reduce((s, d) => s + (d.valor ?? 0), 0));
     const naRua      = propostas.reduce((s, d) => s + (d.valor ?? 0), 0);
-    const vendasC    = fechados.length;
 
     const brunoR      = fechados.filter(d => d.closer === "Bruno").reduce((s, d) => s + (d.valor ?? 0), 0);
     const luisFelipeR = fechados.filter(d => d.closer === "Luís Felipe" || d.closer === "Luis Felipe").reduce((s, d) => s + (d.valor ?? 0), 0);
 
-    const totalShow      = sdrData.reduce((s, d) => s + (d.show     ?? 0), 0);
-    const totalMarcadas  = sdrData.reduce((s, d) => s + (d.marcadas ?? 0), 0);
+    const totalShowSdr     = sdrData.reduce((s, d) => s + (d.show     ?? 0), 0);
+    const totalMarcadasSdr = sdrData.reduce((s, d) => s + (d.marcadas ?? 0), 0);
+    const totalShow      = funil?.acontecidos ?? totalShowSdr;
+    const totalMarcadas  = funil?.marcados    ?? totalMarcadasSdr;
+    const investSdr      = totalMarcadasSdr; // mantém referência aos cálculos diários do SDR
 
     const joaoGabrielM = pipeline.filter(d => d.sdr === "João Gabriel" || d.sdr === "João").length;
 
-    const invest     = config?.investimento     ?? 100000;
+    const invest     = Number(funil?.investimento ?? config?.investimento ?? 100000);
+    void investSdr;
     const meta       = config?.meta_total       ?? 235000;
     const diasT      = config?.dias_uteis_mes   ?? 22;
     const diasH      = config?.dias_uteis_hoje  ?? 17;
 
-    const cpl        = 0; // sem tabela de leads ainda
+    const cpl        = totalLeads > 0 ? invest / totalLeads : 0;
     const cpc        = totalMarcadas > 0 ? invest / totalMarcadas : 0;
     const cpm        = totalMarcadas > 0 ? invest / totalMarcadas : 0;
     const cpr        = totalShow > 0     ? invest / totalShow     : 0;
@@ -75,7 +77,7 @@ const Index = () => {
 
     return {
       meta, receita, naRua, cpv, vendasC,
-      leads: pipeline.length, contatos: totalMarcadas, marcados: totalMarcadas,
+      leads: totalLeads, contatos: totalMarcadas, marcados: totalMarcadas,
       acontecidos: totalShow,
       cpl, cpc, cpm, cpr, funnelCpv: cpv,
       funnelInvest: invest, ticketMedio, roas,
@@ -89,8 +91,6 @@ const Index = () => {
   const syncTime = dataUpdatedAt
     ? `Última Sync: ${new Date(dataUpdatedAt).toLocaleTimeString()}`
     : "Syncing...";
-
-  const status = loading ? "Connecting" : kpis ? "Live Dark Active" : "Sync Failure";
 
   const closers = [
     { name: "Bruno",       value: kpis?.bruno      ?? 0, avatar: AVATARS.bruno      },
@@ -115,25 +115,10 @@ const Index = () => {
           transition={{ delay: 0.3 }}
           className="max-w-[1850px] mx-auto space-y-12"
         >
-          {/* Header + botões de ação */}
-          <div className="flex items-start justify-between gap-4">
-            <div className="flex-1">
-              <Header syncTime={syncTime} status={status} countdown={20} />
-            </div>
-            <div className="flex gap-2 pt-2 flex-wrap">
-              <Link to="/pipeline">
-                <button className="flex items-center gap-1 px-3 py-1.5 rounded-lg border border-[#333] text-gray-400 hover:text-white hover:border-[#C8FF00] text-xs tracking-widest uppercase transition-all">
-                  <TableProperties className="w-3 h-3" /> Pipeline
-                </button>
-              </Link>
-              <AddDealModal />
-              <AddSdrModal />
-              <CloserModal />
-              <button onClick={handleLogout}
-                className="flex items-center gap-1 px-3 py-1.5 rounded-lg border border-[#333] text-gray-600 hover:text-red-400 hover:border-red-400/40 text-xs tracking-widest uppercase transition-all">
-                <LogOut className="w-3 h-3" /> Sair
-              </button>
-            </div>
+          {/* Header */}
+          <div className="flex items-start justify-between gap-4 flex-wrap">
+            <Header syncTime={syncTime} />
+            <div className="pt-2"><PeriodSelector /></div>
           </div>
 
           {/* KPIs globais */}
@@ -142,7 +127,7 @@ const Index = () => {
             <KPICard
               label="Faturamento Confirmado"
               value={formatC(kpis?.receita ?? 0)}
-              subtitle={`${kpis?.vendasC ?? 0} NEGÓCIOS FECHADOS EM ABR`}
+              subtitle={`${kpis?.vendasC ?? 0} NEGÓCIOS FECHADOS · ${periodLabel.toUpperCase()}`}
               variant="primary"
             />
             <KPICard label='Negócios "Na Rua"' value={formatC(kpis?.naRua ?? 0)} />
@@ -159,13 +144,13 @@ const Index = () => {
             <div className="lg:col-span-8 space-y-10">
               <ConversionFunnel
                 data={{
-                  leads:      kpis?.leads      ?? 0,
-                  contatos:   kpis?.contatos   ?? 0,
-                  marcados:   kpis?.marcados   ?? 0,
+                  leads:      kpis?.leads       ?? 0,
+                  marcados:   kpis?.marcados    ?? 0,
                   acontecidos:kpis?.acontecidos ?? 0,
-                  vendas:     kpis?.vendasC    ?? 0,
+                  vendas:     kpis?.vendasC     ?? 0,
                 }}
               />
+              <FunnelManualCard />
               <FunnelInsights
                 cpl={kpis?.cpl ?? 0}
                 cpc={kpis?.cpc ?? 0}

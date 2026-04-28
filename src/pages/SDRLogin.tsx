@@ -33,7 +33,7 @@ export default function SDRLogin() {
         <div className="text-center space-y-1">
           <p className="text-[10px] uppercase tracking-[0.5em] text-gray-600">V4 Company</p>
           <h1 className="text-2xl font-black text-white uppercase tracking-widest">
-            SDR <span className="text-[#C8FF00]">Arena</span>
+            SDR <span className="text-[#E10600]">Arena</span>
           </h1>
           <p className="text-xs text-gray-500">Acesse para lançar seus resultados</p>
         </div>
@@ -50,7 +50,7 @@ export default function SDRLogin() {
                 onClick={() => setSelected(name)}
                 className="w-full py-4 rounded-xl border border-[#2A2A2A] bg-[#1A1A1A]
                            text-white font-bold text-sm tracking-widest uppercase
-                           hover:border-[#C8FF00] hover:text-[#C8FF00] transition-all"
+                           hover:border-[#E10600] hover:text-[#E10600] transition-all"
               >
                 {name}
               </motion.button>
@@ -61,7 +61,7 @@ export default function SDRLogin() {
             <div className="flex items-center gap-3">
               <button type="button" onClick={() => { setSelected(null); setPin(""); setError("") }}
                 className="text-gray-600 hover:text-white transition-colors text-xs">← Voltar</button>
-              <p className="text-[#C8FF00] font-black uppercase tracking-widest text-sm">{selected}</p>
+              <p className="text-[#E10600] font-black uppercase tracking-widest text-sm">{selected}</p>
             </div>
 
             <div className="space-y-2">
@@ -77,14 +77,14 @@ export default function SDRLogin() {
               {error && <p className="text-red-400 text-xs text-center">{error}</p>}
             </div>
 
-            <Button type="submit" className="w-full h-12 bg-[#C8FF00] text-black font-black uppercase tracking-widest hover:bg-[#b0e000]">
+            <Button type="submit" className="w-full h-12 bg-[#E10600] text-white font-black uppercase tracking-widest hover:bg-[#b00500]">
               Entrar
             </Button>
           </form>
         )}
 
         <p className="text-center text-[10px] text-gray-700 uppercase tracking-widest">
-          Performance Arena • ABR 2026
+          Performance Arena
         </p>
       </motion.div>
     </div>

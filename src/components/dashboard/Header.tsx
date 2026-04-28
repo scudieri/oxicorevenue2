@@ -2,11 +2,11 @@ import v4Logo from "@/assets/v4-logo.jpg";
 
 interface HeaderProps {
   syncTime: string;
-  status: string;
-  countdown: number;
+  status?: string;
+  countdown?: number;
 }
 
-export const Header = ({ syncTime, status, countdown }: HeaderProps) => {
+export const Header = ({ syncTime }: HeaderProps) => {
   return (
     <header className="flex flex-col lg:flex-row justify-between items-center gap-8">
       <div className="flex items-center gap-6">
@@ -20,7 +20,7 @@ export const Header = ({ syncTime, status, countdown }: HeaderProps) => {
           </h1>
           <div className="flex items-center gap-3 mt-2">
             <span className="text-[10px] font-bold text-primary uppercase tracking-widest bg-primary/10 px-2 py-0.5 rounded border border-primary/20">
-              Line-up Total Abril
+              Performance Live
             </span>
             <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
               {syncTime}
@@ -29,23 +29,6 @@ export const Header = ({ syncTime, status, countdown }: HeaderProps) => {
         </div>
       </div>
 
-      <div className="flex items-center gap-5">
-        <div className="neu-inset px-6 py-3 flex items-center gap-4">
-          <div className="w-2.5 h-2.5 rounded-full bg-primary blink" />
-          <span className="text-[11px] font-black tracking-[0.2em] text-muted-foreground uppercase font-mono">
-            {status}
-          </span>
-        </div>
-        <div className="glass-neu px-4 py-3 flex items-center gap-2">
-          <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
-            Próx. Sync
-          </span>
-          <span className="text-lg font-black text-primary font-mono tabular-nums min-w-[2ch] text-center">
-            {countdown}
-          </span>
-          <span className="text-[10px] font-bold text-muted-foreground">s</span>
-        </div>
-      </div>
     </header>
   );
 };

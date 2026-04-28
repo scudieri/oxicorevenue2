@@ -48,9 +48,9 @@ export default function Login() {
         <div className="text-center space-y-2">
           <p className="text-[10px] uppercase tracking-[0.5em] text-gray-600">V4 Company</p>
           <h1 className="text-3xl font-black text-white uppercase tracking-widest leading-none">
-            Performance<br /><span className="text-[#C8FF00]">Arena</span>
+            Performance<br /><span className="text-[#E10600]">Arena</span>
           </h1>
-          <p className="text-xs text-gray-600">ABR 2026 — Oxicore</p>
+          <p className="text-xs text-gray-600">Oxicore Revenue</p>
         </div>
 
         <div className="space-y-3">
@@ -132,7 +132,7 @@ export default function Login() {
               <Button
                 type="submit"
                 disabled={loading}
-                className="w-full h-12 bg-[#C8FF00] text-black font-black uppercase tracking-widest hover:bg-[#b0e000]"
+                className="w-full h-12 bg-[#E10600] text-white font-black uppercase tracking-widest hover:bg-[#b00500]"
               >
                 {loading ? "Entrando..." : "Entrar"}
               </Button>

@@ -33,14 +33,14 @@ export const AddDealModal = () => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button size="sm" className="bg-[#C8FF00] text-black hover:bg-[#b0e000] font-black text-xs tracking-widest uppercase">
+        <Button size="sm" className="w-full justify-start bg-[#E10600] text-white hover:bg-[#b00500] font-black text-xs tracking-widest uppercase">
           <Plus className="w-3 h-3 mr-1" /> Novo Deal
         </Button>
       </DialogTrigger>
 
       <DialogContent className="bg-[#1A1A1A] border-[#333] text-white max-w-md">
         <DialogHeader>
-          <DialogTitle className="text-[#C8FF00] font-black tracking-widest uppercase text-sm">
+          <DialogTitle className="text-[#E10600] font-black tracking-widest uppercase text-sm">
             Adicionar Deal ao Pipeline
           </DialogTitle>
         </DialogHeader>
@@ -148,7 +148,7 @@ export const AddDealModal = () => {
           </div>
 
           <Button type="submit" disabled={isPending}
-            className="w-full bg-[#C8FF00] text-black font-black uppercase tracking-widest hover:bg-[#b0e000]">
+            className="w-full bg-[#E10600] text-white font-black uppercase tracking-widest hover:bg-[#b00500]">
             {isPending ? "Salvando..." : "Salvar Deal"}
           </Button>
         </form>

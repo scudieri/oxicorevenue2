@@ -13,15 +13,15 @@ const CLOSER_STATUS = [
   {
     key: "apresentacao_proposta",
     label: "Proposta Apresentada",
-    color: "border-orange-400 text-orange-400 bg-orange-400/10",
-    dot: "bg-orange-400",
+    color: "border-[#E10600] text-[#E10600] bg-[#E10600]/10",
+    dot: "bg-gray-400",
     pipelineStatus: "Proposta" as PipelineDeal["status"],
   },
   {
     key: "venda_realizada",
     label: "Venda Fechada",
-    color: "border-[#C8FF00] text-[#C8FF00] bg-[#C8FF00]/10",
-    dot: "bg-[#C8FF00]",
+    color: "border-[#E10600] text-[#E10600] bg-[#E10600]/10",
+    dot: "bg-[#E10600]",
     pipelineStatus: "Fechado" as PipelineDeal["status"],
   },
   {
@@ -41,7 +41,7 @@ const CLOSER_STATUS = [
 ]
 
 const TEMP_DOT: Record<string, string> = {
-  Quente: "bg-red-500", Morno: "bg-orange-400", Frio: "bg-[#00E5FF]"
+  Quente: "bg-red-500", Morno: "bg-gray-400", Frio: "bg-gray-400"
 }
 
 const fmt = (v: number | null) =>
@@ -98,14 +98,14 @@ export const CloserModal = () => {
     <Dialog open={open} onOpenChange={handleClose}>
       <DialogTrigger asChild>
         <Button size="sm" variant="outline"
-          className="border-[#333] text-gray-400 hover:text-white hover:border-[#C8FF00] text-xs tracking-widest uppercase">
-          <Target className="w-3 h-3 mr-1" /> Closer
+          className="w-full justify-start border-[#333] text-gray-400 hover:text-white hover:border-[#E10600] text-xs tracking-widest uppercase">
+          <Target className="w-3 h-3 mr-1" /> Registrar Closer
         </Button>
       </DialogTrigger>
 
       <DialogContent className="bg-[#1A1A1A] border-[#333] text-white max-w-sm max-h-[85vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="text-[#C8FF00] font-black tracking-widest uppercase text-sm">
+          <DialogTitle className="text-[#E10600] font-black tracking-widest uppercase text-sm">
             Registrar Closer
           </DialogTitle>
         </DialogHeader>
@@ -124,11 +124,11 @@ export const CloserModal = () => {
                 {filtered.map(deal => (
                   <button key={deal.id} onClick={() => setSelected(deal)}
                     className="w-full bg-[#252525] border border-[#333] rounded-xl px-3 py-2.5
-                               flex items-center justify-between hover:border-[#C8FF00]/40 transition-all text-left">
+                               flex items-center justify-between hover:border-[#E10600]/40 transition-all text-left">
                     <div>
                       <p className="text-white font-bold text-sm">{deal.cliente}</p>
                       <div className="flex items-center gap-2 mt-0.5">
-                        <span className="text-[#C8FF00] text-xs font-bold">{fmt(deal.valor)}</span>
+                        <span className="text-[#E10600] text-xs font-bold">{fmt(deal.valor)}</span>
                         <span className="text-gray-700 text-xs">·</span>
                         <span className="text-gray-600 text-xs">{deal.produto}</span>
                       </div>
@@ -151,7 +151,7 @@ export const CloserModal = () => {
               className="space-y-4 mt-2">
               <div className="bg-[#252525] border border-[#333] rounded-xl px-3 py-2.5 flex items-center justify-between">
                 <div>
-                  <p className="text-[#C8FF00] font-black text-sm">{selected.cliente}</p>
+                  <p className="text-[#E10600] font-black text-sm">{selected.cliente}</p>
                   <p className="text-gray-600 text-xs">{fmt(selected.valor)} · {selected.produto}</p>
                 </div>
                 <button onClick={() => { setSelected(null); setStatus("") }}
@@ -180,7 +180,7 @@ export const CloserModal = () => {
                 className="bg-[#252525] border-[#333] text-white h-10" />
 
               <Button onClick={handleSave} disabled={!status || saving}
-                className="w-full bg-[#C8FF00] text-black font-black uppercase tracking-widest hover:bg-[#b0e000] disabled:opacity-30">
+                className="w-full bg-[#E10600] text-white font-black uppercase tracking-widest hover:bg-[#b00500] disabled:opacity-30">
                 {saving ? "Salvando..." : "Registrar"}
               </Button>
             </motion.div>
@@ -189,7 +189,7 @@ export const CloserModal = () => {
           {saved && (
             <motion.div key="saved" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}
               className="text-center py-10 space-y-3">
-              <CheckCircle2 className="w-10 h-10 text-[#C8FF00] mx-auto" />
+              <CheckCircle2 className="w-10 h-10 text-[#E10600] mx-auto" />
               <p className="text-white font-black uppercase tracking-widest text-sm">Registrado!</p>
               <p className="text-gray-500 text-xs">{selected?.cliente}</p>
               {selectedDef?.pipelineStatus && (

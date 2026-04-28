@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from "react"
 import { User, Session } from "@supabase/supabase-js"
-import { supabase } from "@/lib/supabase"
+import { supabase, supabaseData } from "@/lib/supabase"
 
 export type Role = "admin" | "closer" | "sdr" | "spectator"
 
@@ -31,7 +31,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const resolveRole = async (supaUser: User): Promise<AuthUser> => {
     const email = supaUser.email ?? ""
     try {
-      const { data } = await supabase
+      const { data } = await supabaseData
         .from("user_roles")
         .select("role, nome")
         .eq("email", email)
@@ -89,7 +89,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: `${window.location.origin}/`,
+        redirectTo: `${window.location.origin}/login`,
         queryParams: { hd: "v4company.com" },
       },
     })

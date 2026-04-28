@@ -4,11 +4,14 @@ import { TooltipProvider } from "@/components/ui/tooltip"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom"
 import { AuthProvider, useAuth } from "@/contexts/AuthContext"
+import { PeriodProvider } from "@/contexts/PeriodContext"
+import { Layout } from "@/components/dashboard/Layout"
 import Index       from "./pages/Index"
 import Login       from "./pages/Login"
 import Pipeline    from "./pages/Pipeline"
 import SDRPanel    from "./pages/SDRPanel"
 import CloserPanel from "./pages/CloserPanel"
+import TeamPanel   from "./pages/TeamPanel"
 import NotFound    from "./pages/NotFound"
 
 const queryClient = new QueryClient()
@@ -22,12 +25,13 @@ const Protected = ({ children }: { children: React.ReactNode }) => {
     </div>
   )
   if (!user) return <Navigate to="/login" replace />
-  return <>{children}</>
+  return <Layout>{children}</Layout>
 }
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <AuthProvider>
+     <PeriodProvider>
       <TooltipProvider>
         <Toaster />
         <Sonner />
@@ -38,10 +42,12 @@ const App = () => (
             <Route path="/pipeline" element={<Protected><Pipeline /></Protected>} />
             <Route path="/sdr" element={<Protected><SDRPanel /></Protected>} />
             <Route path="/closer" element={<Protected><CloserPanel /></Protected>} />
+            <Route path="/team" element={<Protected><TeamPanel /></Protected>} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
       </TooltipProvider>
+     </PeriodProvider>
     </AuthProvider>
   </QueryClientProvider>
 )
