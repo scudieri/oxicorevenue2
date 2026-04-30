@@ -52,12 +52,10 @@ const Index = () => {
     const totalMarcadasSdr = sdrData.reduce((s, d) => s + (d.marcadas ?? 0), 0);
     const totalShow      = funil?.acontecidos ?? totalShowSdr;
     const totalMarcadas  = funil?.marcados    ?? totalMarcadasSdr;
-    const investSdr      = totalMarcadasSdr; // mantém referência aos cálculos diários do SDR
 
-    const joaoGabrielM = pipeline.filter(d => d.sdr === "João Gabriel" || d.sdr === "João").length;
+    const joaoGabrielM = sdrData.reduce((s, d) => s + (d.marcadas ?? 0), 0);
 
     const invest     = Number(funil?.investimento ?? config?.investimento ?? 100000);
-    void investSdr;
     const meta       = config?.meta_total       ?? 235000;
     const diasT      = config?.dias_uteis_mes   ?? 22;
     const diasH      = config?.dias_uteis_hoje  ?? 17;
@@ -187,9 +185,9 @@ const Index = () => {
               {/* SDRs */}
               <div className="space-y-6">
                 <h3 className="text-xs font-black uppercase tracking-[0.4em] text-muted-foreground px-2 border-l-4 border-emerald pl-4 italic">
-                  Motor SDR Abr
+                  Motor SDR
                 </h3>
-                {sdrs.map((s) => (
+                {sdrs.map(s => (
                   <SDRCard
                     key={s.name}
                     name={s.name}
